@@ -3,8 +3,11 @@
 #include<string>
 #include<string.h>
 #include<iostream>
+#include<sstream>
 
 using namespace std;
+
+ofstream out;
 
 
 void computeLPSArray(std::string pat, int M, int *lps)
@@ -65,13 +68,19 @@ void KMPSearch(std::string pat, std::string txt,int page, int line, int &count, 
         {
         	if (i==j && !isalpha(txt[i-j+M]))
         	{
+        		out.open("output.txt",std::ios::app);
 				std::cout<<"Page "<<page<<", line "<<line<<"\n";
+				out<<"Page "<<page<<", line "<<line<<"\n";
+				out.close();
 				count++;
 			}
 			
         	else if (!isalpha(txt[i-j-1]) && !isalpha(txt[i-j+M]))
             {
+				out.open("output.txt",std::ios::app);
 				std::cout<<"Page "<<page<<", line "<<line<<"\n";
+				out<<"Page "<<page<<", line "<<line<<"\n";
+				out.close();
 				count++;
 			}
             j = lps[j-1];
@@ -103,26 +112,33 @@ int main ()
 	string query;
 	
 	q.open("queries.txt");
+	out.open("output.txt",std::ios::trunc);
+	out.close();
+
 	
 	
 	while (std::getline(q, query))
 	{
+		out.open("output.txt",std::ios::app);
 		cout<<"Word: "<<query<<"\nOccurences:\n";
-		
+		out<<"Word: "<<query<<"\nOccurences:\n";
+		out.close();
+				
 		int page=1,count=0,M=query.length();
 		int lps[M];
 		computeLPSArray(query, M, lps);
 		
-		for (;page<=1;page++)
+		for (;page<=4;page++)
 			{
 				int line=1;
-				/*string Result;
+				string Result;
 				stringstream convert; 
 				convert << page;
-				Result = convert.str();
+				convert >> Result;
 				
 				string p = "page_"+Result+".txt";
-			*/	t.open("page_1.txt");
+				char *s = (char*) p.c_str();
+				t.open(s);
 				
 				string txt;
 				
@@ -138,8 +154,14 @@ int main ()
 				
 			}
 			
-		if (count==0) cout<<"None\n\n\n";
-		else cout<<"\n\n";		
+				
+				
+		out.open("output.txt",std::ios::app);
+
+		if (count==0) { cout<<"None\n\n\n"; out<<"None\n\n\n"; }
+		else { cout<<"\n\n"; out<<"\n\n"; }
+		
+		out.close();		
 		
 		
 	}
